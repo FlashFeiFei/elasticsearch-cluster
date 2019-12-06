@@ -10,3 +10,4 @@ node.master: true
 node.data: true  
 discovery.zen.ping.unicast.hosts: ["106.12.76.73:9300","106.12.76.73:9301","106.12.76.73:9302"]
 discovery.zen.minimum_master_nodes: 2
+discovery.zen.ping_timeout:30
