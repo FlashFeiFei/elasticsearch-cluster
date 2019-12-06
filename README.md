@@ -9,12 +9,29 @@
       |-- data
       |-- config
          |-- es2.yml
-    |-- node3
+   |-- node3
       |-- data
       |-- config
          |-- es3.yml
+   |-- Dockerfile 需要docker build -t my/es:1.0 .
 ```
 
+# Dockerfile
+
+```
+FROM elasticsearch:6.8.5
+
+#安装ik中文分词
+
+ENV VERSION=6.8.5
+
+RUN sh -c '/bin/echo -e "y" | ./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v${VERSION}/elasticsearch-analysis-ik-${VERSION}.zip'
+```
+
+执行
+```
+docker build -t my/es:1.0 .
+```
 # elasticsearch配置文件
 
 - 配置文件讲解
@@ -45,7 +62,6 @@ discovery.zen.ping.unicast.hosts: ["106.12.76.73:9300","106.12.76.73:9301","106.
 #这个参数控制的是，选举主节点时需要看到最少多少个具有master资格的活节点，才能进行选举。官方的推荐值是(N/2)+1，其中N是具有master资格的节点的数量。
 discovery.zen.minimum_master_nodes: 2
 # discovery.zen.ping_timeout:30（默认值是3秒）——其他节点ping主节点多久时间没有响应就认为主节点不可用了
-discovery.zen.ping_timeout: 30
 ```
 
 
@@ -104,7 +120,7 @@ discovery.zen.minimum_master_nodes: 2
 version: '3.1'
 services:
   es:
-    image: elasticsearch:6.8.5
+    image: my/es:1.0
     environment:
       #我的服务器内存只有2g，这里设置只用128m，内存不够
       - ES_JAVA_OPTS=-Xms128m -Xmx128m
@@ -122,7 +138,7 @@ services:
 version: '3.1'
 services:
   es:
-    image: elasticsearch:6.8.5
+    image: my/es:1.0
     environment:
       - ES_JAVA_OPTS=-Xms128m -Xmx128m
     volumes:
@@ -139,7 +155,7 @@ services:
 version: '3.1'
 services:
   es:
-    image: elasticsearch:6.8.5
+    image: my/es:1.0
     environment:
       - ES_JAVA_OPTS=-Xms128m -Xmx128m
     volumes:
