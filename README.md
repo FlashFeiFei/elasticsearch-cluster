@@ -41,8 +41,11 @@ node.master: true
 node.data: true  
 #集群个节点IP地址，也可以使用es-node等名称，需要各节点能够解析
 discovery.zen.ping.unicast.hosts: ["106.12.76.73:9300","106.12.76.73:9301","106.12.76.73:9302"]
-#自动发现master节点的最小数，如果这个集群中配置进来的master节点少于这个数目，es的日志会一直报master节点数目不足。（默认为1）为了避免脑裂，个数请遵从该公式 => (totalnumber of master-eligible nodes / 2 + 1)。 * 脑裂是指在主备切换时，由于切换不彻底或其他原因，导致客户端和Slave误以为出现两个active master，最终使得整个集群处于混乱状态*
-discovery.zen.minimum_master_nodes: 1
+#discovery.zen.minimum_master_nodes: (有master资格节点数/2) + 1
+#这个参数控制的是，选举主节点时需要看到最少多少个具有master资格的活节点，才能进行选举。官方的推荐值是(N/2)+1，其中N是具有master资格的节点的数量。
+discovery.zen.minimum_master_nodes: 2
+# discovery.zen.ping_timeout:30（默认值是3秒）——其他节点ping主节点多久时间没有响应就认为主节点不可用了
+discovery.zen.ping_timeout: 30
 ```
 
 
@@ -59,7 +62,7 @@ http.cors.allow-origin: "*"
 node.master: true 
 node.data: true  
 discovery.zen.ping.unicast.hosts: ["106.12.76.73:9300","106.12.76.73:9301","106.12.76.73:9302"]
-discovery.zen.minimum_master_nodes: 1
+discovery.zen.minimum_master_nodes: 2
 ```
 
 - es2.yml
@@ -75,7 +78,7 @@ http.cors.allow-origin: "*"
 node.master: true 
 node.data: true  
 discovery.zen.ping.unicast.hosts: ["106.12.76.73:9300","106.12.76.73:9301","106.12.76.73:9302"]
-discovery.zen.minimum_master_nodes: 1
+discovery.zen.minimum_master_nodes: 2
 ```
 
 - es3.yml
@@ -91,7 +94,7 @@ http.cors.allow-origin: "*"
 node.master: true 
 node.data: true  
 discovery.zen.ping.unicast.hosts: ["106.12.76.73:9300","106.12.76.73:9301","106.12.76.73:9302"]
-discovery.zen.minimum_master_nodes: 1
+discovery.zen.minimum_master_nodes: 2
 ```
 
 # docker-compose.yml
